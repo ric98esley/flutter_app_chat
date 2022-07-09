@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:chat_app/widgets/blueButton.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
 import 'package:chat_app/widgets/custom_input.dart';
+
+import 'package:chat_app/services/auth_services.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -45,10 +48,10 @@ class _Fom extends StatefulWidget {
 }
 
 class __FomState extends State<_Fom> {
+  final emailCrtl = TextEditingController();
+  final passW = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final emailCrtl = TextEditingController();
-    final passW = TextEditingController();
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -68,10 +71,13 @@ class __FomState extends State<_Fom> {
               isPassword: true,
             ),
             BlueButton(
-              text: 'Summit',
-              onPressed: () =>
-                  print('Email ${emailCrtl.text}  pass ${passW.text}'),
-            ), // TODo Crear boton
+                text: 'Ingrese',
+                onPressed: () {
+                  print('Email ${emailCrtl.text}  pass ${passW.text}');
+                  final authService =
+                      Provider.of<AuthService>(context, listen: false);
+                  authService.login(emailCrtl.text, passW.text);
+                }), // TODo Crear boton
           ],
         ),
       ),
