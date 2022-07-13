@@ -5,6 +5,7 @@ import 'package:chat_app/widgets/blueButton.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
 import 'package:chat_app/widgets/custom_input.dart';
+import 'package:chat_app/helpers/show_warning.dart';
 
 import 'package:chat_app/services/auth_services.dart';
 
@@ -52,6 +53,8 @@ class __FomState extends State<_Fom> {
   final passW = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -72,12 +75,22 @@ class __FomState extends State<_Fom> {
             ),
             BlueButton(
                 text: 'Ingrese',
-                onPressed: () {
-                  print('Email ${emailCrtl.text}  pass ${passW.text}');
-                  final authService =
-                      Provider.of<AuthService>(context, listen: false);
-                  authService.login(emailCrtl.text, passW.text);
-                }), // TODo Crear boton
+                onPressed: authService.auntenticando
+                    ? null
+                    : () async {
+                        FocusScope.of(context).unfocus();
+                        final loginOk = await authService.login(
+                            emailCrtl.text.trim(), passW.text.trim());
+                        if (loginOk) {
+                          //Conectar a socket sevice
+                          Navigator.pushReplacementNamed(context, 'users');
+                          // Navegar pantalla
+                        } else {
+                          //mostrar alerta
+                          showWarning(context, "Autenticacion incorrecto",
+                              "Revise sus credenciales");
+                        }
+                      }), // TODo Crear boton
           ],
         ),
       ),

@@ -1,18 +1,38 @@
+// To parse this JSON data, do
+//
+//     final user = userFromJson(jsonString);
+
+import 'package:meta/meta.dart';
+import 'dart:convert';
+
+User userFromJson(String str) => User.fromJson(json.decode(str));
+
+String userToJson(User data) => json.encode(data.toJson());
+
 class User {
-  bool online;
-  String email;
+  User({
+    required this.name,
+    required this.email,
+    required this.online,
+    required this.uid,
+  });
+
   String name;
+  String email;
+  bool online;
   String uid;
 
-  User(
-      {this.online = false,
-      this.email = 'no-email',
-      this.name = 'no-name',
-      this.uid = 'no-uid'});
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        name: json["name"],
+        email: json["email"],
+        online: json["online"],
+        uid: json["uid"],
+      );
 
-  factory User.fromMap(Map<String, dynamic> obj) => User(
-      uid: obj.containsKey('id') ? obj['id'] : 'no-id',
-      name: obj.containsKey('name') ? obj['name'] : 'no-name',
-      email: obj.containsKey('email') ? obj['email'] : 'no-email',
-      online: obj.containsKey('online') ? obj['online'] : false);
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "email": email,
+        "online": online,
+        "uid": uid,
+      };
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/helpers/show_warning.dart';
 import 'package:chat_app/widgets/blueButton.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
@@ -44,11 +47,13 @@ class _Fom extends StatefulWidget {
 }
 
 class __FomState extends State<_Fom> {
+  final emailCrtl = TextEditingController();
+  final passCrtl = TextEditingController();
+  final nameCrtl = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final emailCrtl = TextEditingController();
-    final passCrtl = TextEditingController();
-    final nameCrtl = TextEditingController();
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -73,10 +78,24 @@ class __FomState extends State<_Fom> {
               isPassword: true,
             ),
             BlueButton(
-              text: 'Summit',
-              onPressed: () =>
-                  print('Email ${emailCrtl.text}  pass ${passCrtl.text}'),
-            ), // TODo Crear boton
+                text: 'Registrar',
+                onPressed: authService.auntenticando
+                    ? null
+                    : () async {
+                        FocusScope.of(context).unfocus();
+                        final registerOk = await authService.register(
+                            nameCrtl.text.trim(),
+                            emailCrtl.text.trim(),
+                            passCrtl.text.trim());
+                        if (registerOk == true) {
+                          //Conectar a socket sevice
+                          Navigator.pushReplacementNamed(context, 'users');
+                          // Navegar pantalla
+                        } else {
+                          //mostrar alerta
+                          showWarning(context, "Registro invalido", registerOk);
+                        }
+                      }), // TODo Crear boton
           ],
         ),
       ),
