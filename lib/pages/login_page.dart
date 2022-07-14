@@ -7,6 +7,7 @@ import 'package:chat_app/widgets/logo.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/helpers/show_warning.dart';
 
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/services/auth_services.dart';
 
 class LoginPage extends StatelessWidget {
@@ -54,6 +55,7 @@ class __FomState extends State<_Fom> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -83,6 +85,7 @@ class __FomState extends State<_Fom> {
                             emailCrtl.text.trim(), passW.text.trim());
                         if (loginOk) {
                           //Conectar a socket sevice
+                          socketService.connect();
                           Navigator.pushReplacementNamed(context, 'users');
                           // Navegar pantalla
                         } else {
