@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/services/auth_services.dart';
+
 import 'package:chat_app/helpers/show_warning.dart';
 import 'package:chat_app/widgets/blueButton.dart';
 import 'package:chat_app/widgets/labels.dart';
@@ -53,6 +55,7 @@ class __FomState extends State<_Fom> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -89,6 +92,7 @@ class __FomState extends State<_Fom> {
                             passCrtl.text.trim());
                         if (registerOk == true) {
                           //Conectar a socket sevice
+                          socketService.connect();
                           Navigator.pushReplacementNamed(context, 'users');
                           // Navegar pantalla
                         } else {
